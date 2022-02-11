@@ -1,7 +1,7 @@
 <% layout('layouts/boilerplate.ejs') %>
     <div class="row">
-        <div class="col-6 offset-3">
-            <div class="card" style="width: 18rem;">
+        <div class="col-md-4 offset-md-4 ">
+            <div class="card">
                 <img src="<%=foundCampground.image%>" class="card-img-top" alt="...">
                 <div class="card-body">
                     <h5 class="card-title">
@@ -20,7 +20,8 @@
                 </ul>
                 <div class="card-body">
                     <div class="mb-3">
-                        <a href="/campgrounds/<%= foundCampground._id %>/edit " class="card-link btn btn-outline-info">Edit</a>
+                        <a href="/campgrounds/<%= foundCampground._id %>/edit "
+                            class="card-link btn btn-outline-info">Edit</a>
                         <form class="d-inline" action="/campgrounds/<%= foundCampground._id %>?_method=DELETE"
                             method="POST">
                             <button class="btn btn-outline-danger">DELETE</button>
