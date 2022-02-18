@@ -1,3 +1,4 @@
+const { string } = require('joi');
 const Joi = require('joi');  // javascript library to validate model when we edit or create a new model. 
 
 // schema for valiating the data of new campground submitted by user
@@ -10,3 +11,11 @@ module.exports.campgroundSchema = Joi.object({
         description: Joi.string().required()
     }).required()
 });
+
+// schema for validation the data of reviews submitted by the user
+module.exports.reviewSchema = Joi.object({
+    review: Joi.object({
+        body: Joi.string().required(),
+        rating: Joi.number().required().min(1).max(5)
+    }).required()
+})
