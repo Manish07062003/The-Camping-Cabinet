@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
 const cities = require('./cities');
 const { places, descriptors } = require('./seedHelpers');
-const Campground = require('../models/campground'); // requiring model from campground.js
+const Campground = require('../models/campground');
+const Review = require('../models/review');
+const User = require('../models/user');
+const review = require('../models/review');
 
 mongoose.connect('mongodb://localhost:27017/campgrounds', {
     useNewUrlParser: true, // Parses the data from the project and returns back in json format
@@ -23,6 +26,7 @@ const seedDB = async () => {
         const random1000 = Math.floor(Math.random() * 1000); // since there are 1000 cities so we have taken random nums from 1 to 1000
         const price = Math.floor(Math.random() * 30) + 10;
         const camp = new Campground({
+            author: '6223192e03b3922290a6a61a',
             location: `${cities[random1000].city},${cities[random1000].state}`,
             title: `${sample(descriptors)} ${sample(places)}`,
             image: `https://picsum.photos/300/200?random=${i}`,

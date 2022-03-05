@@ -63,7 +63,6 @@ passport.deserializeUser(User.deserializeUser());
 
 
 app.use((req, res, next) => {
-  console.log(req.session);
   // passport.js add the user detial to req object when user is logged in
   res.locals.currentUser = req.user;
   res.locals.success = req.flash('success');
