@@ -17,7 +17,10 @@ const campgroundRoutes = require('./routes/campground');
 const reviewRoutes = require('./routes/review');
 
 mongoose.connect("mongodb://localhost:27017/campgrounds", {
-  useNewUrlParser: true, // Parses the data from the project and returns back in json format
+
+  // Parses the data from the project and returns back in json format
+  useNewUrlParser: true,
+
   useUnifiedTopology: true,
 });
 
@@ -52,26 +55,35 @@ app.use(flash());
 
 // go to passportjs documentation for details 
 app.use(passport.initialize());
+
 app.use(passport.session());
+
 // use static authenticate method of model in LocalStrategy
 //Generates a function that is used in Passport's LocalStrategy 
 passport.use(new LocalStrategy(User.authenticate()));
+
 //Generates a function that is used by Passport to serialize users into the session
 passport.serializeUser(User.serializeUser());
+
 // Generates a function that is used by Passport to deserialize users into the session
 passport.deserializeUser(User.deserializeUser());
 
 
 app.use((req, res, next) => {
+
   // passport.js add the user detial to req object when user is logged in
   res.locals.currentUser = req.user;
+
   res.locals.success = req.flash('success');
   res.locals.error = req.flash('error');
   next();
 })
 
-app.set("views", path.join(__dirname, "views")); // setting views directory path
-app.set("view engine", "ejs"); // setting view engine to embedded javascript (ejs)
+// setting views directory path
+app.set("views", path.join(__dirname, "views"));
+
+// setting view engine to embedded javascript (ejs)
+app.set("view engine", "ejs");
 
 
 app.use('/', userRoutes);
@@ -80,8 +92,10 @@ app.use('/campgrounds/:id/reviews', reviewRoutes);
 
 app.get('/fakeuser', async (req, res) => {
   const user = new User({ email: 'manish@gmail.com', username: 'manish123' })
+
   //register(user, password, cb) Convenience method to register a new user instance with a given password. Checks if username is unique. 
   const newUser = await User.register(user, 'manish@123');
+
   res.send(newUser);
 })
 
@@ -90,8 +104,10 @@ app.get("/", (req, res) => {
 });
 
 app.all("*", (req, res, next) => {
+
   // if any of the routes does not match this route will throw an page not found error
   next(new ExpressError("Page not found", 404));
+
 });
 
 //error handling middleware
