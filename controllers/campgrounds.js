@@ -1,5 +1,5 @@
 const Campground = require('../models/campground');
-
+const { cloudinary } = require('../cloudinary/index')
 
 module.exports.index = async (req, res) => {
     const camp = await Campground.find({});
@@ -28,6 +28,7 @@ module.exports.createCampground = async (req, res, next) => {
 
     // title and location are under campground because we gave a name campground[title] in the new.ejs form
     const campground = new Campground(req.body.campground);
+    campground.images = req.files.map(f => ({ url: f.path, filename: f.filename }))
 
     // adding user id to the campground created by the user
     campground.author = req.user._id;
@@ -43,12 +44,27 @@ module.exports.renderEditForm = async (req, res, next) => {
 }
 
 module.exports.updateCampground = async (req, res) => {
+    console.log(req.body);
     const campground = await Campground.findByIdAndUpdate(req.params.id, { ...req.body.campground });
+    const imgs = req.files.map(f => ({ url: f.path, filename: f.filename }))
+    campground.images.push(...imgs);
+    if (req.body.deleteImages) {
+        for (let filename of req.body.deleteImages) {
+
+            // deletes images in cloudinary storage
+            await cloudinary.uploader.destroy(filename);
+            
+        }
+        // deletes images in mongoDB 
+        await campground.updateOne({ $pull: { images: { filename: { $in: req.body.deleteImages } } } })
+
+    }
+    await campground.save();
     req.flash('success', 'Successfully updated campground');
     res.redirect(`/campgrounds/${campground._id}`);
 }
 
-module.exports.deleteCampground= async (req, res) => {
+module.exports.deleteCampground = async (req, res) => {
     await Campground.findByIdAndDelete(req.params.id);
     req.flash('success', 'Successfully deleted Campground');
     res.redirect("/campgrounds");

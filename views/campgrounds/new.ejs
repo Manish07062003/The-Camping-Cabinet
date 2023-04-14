@@ -2,7 +2,12 @@
     <div class="row">
         <h1 class="text-center">New Campground</h1>
         <div class="col-6 offset-3">
-            <form action="/campgrounds" method="POST" class="needs-validation" novalidate>
+
+            <!-- enctype="multipart/form-data" it allows entire files to be included in the data -->
+            <!-- Multer is a node.js middleware for handling multipart/form-data, which is primarily used for uploading files -->
+            <!-- we use multer middleware for parsing mutlipart form-data -->
+            <form action="/campgrounds" method="POST" class="needs-validation" enctype="multipart/form-data" novalidate>
+
                 <div class="mb-3">
                     <label class="form-label" for="title">Title</label>
                     <input class="form-control" type="text" id="title" name="campground[title]" required>
@@ -18,10 +23,10 @@
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label" for="image">Image Url</label>
-                    <input class="form-control" type="text" id="image" name="campground[image]" required>
-                    <div class="valid-feedback">
-                        Looks good!
+                    <label for="image" class="form-label">Upload images</label>
+                    <div class="input-group">
+                        <input type="file" class="form-control" id="image" name="image" multiple
+                            aria-describedby="inputGroupFileAddon04" aria-label="Upload">
                     </div>
                 </div>
                 <div class="mb-3">

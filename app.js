@@ -1,3 +1,11 @@
+// if we deploy then it will be in production otherwise in development
+if (process.env.NODE_ENV !== "production") {
+
+  // Dotenv is a zero-dependency module that loads environment variables from a .env file into process.env
+  require('dotenv').config();
+}
+
+
 const express = require("express");
 const app = express();
 const path = require("path");
@@ -59,7 +67,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // use static authenticate method of model in LocalStrategy
-//Generates a function that is used in Passport's LocalStrategy 
+// Generates a function that is used in Passport's LocalStrategy 
 passport.use(new LocalStrategy(User.authenticate()));
 
 //Generates a function that is used by Passport to serialize users into the session

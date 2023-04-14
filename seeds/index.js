@@ -29,7 +29,16 @@ const seedDB = async () => {
             author: '6223192e03b3922290a6a61a',
             location: `${cities[random1000].city},${cities[random1000].state}`,
             title: `${sample(descriptors)} ${sample(places)}`,
-            image: `https://picsum.photos/300/200?random=${i}`,
+            images: [
+                {
+                    url: 'https://res.cloudinary.com/dqnw9d56g/image/upload/v1656142781/The%20Camping%20Cabinet/dhse68bj2dwkwwxgpdy1.jpg',
+                    filename: 'The Camping Cabinet/ghmqsz8tyhssxaju3hxb',
+                },
+                {
+                    url: 'https://res.cloudinary.com/dqnw9d56g/image/upload/v1656085527/The%20Camping%20Cabinet/upmwcfn8zltuwqtzxt5b.jpg',
+                    filename: 'The Camping Cabinet/upmwcfn8zltuwqtzxt5b',
+                }
+            ],
             description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsam fugit voluptatibus earum facilis. Doloribus autem quod sed. Quia consequuntur harum facilis, obcaecati omnis temporibus sint blanditiis doloribus?',
             price: price
         })
