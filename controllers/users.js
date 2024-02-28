@@ -39,7 +39,12 @@ module.exports.login = async (req, res) => {
 }
 
 module.exports.logout = (req, res) => {
-    req.logout();
-    req.flash('success', 'logged out');
-    res.redirect('/campgrounds');
+    req.logout(function (err) {
+        if (err) {
+            return next(err);
+        }
+        req.flash('success', 'logged out');
+        const redirectUrl = req.session.returnTo || '/campgrounds';
+        res.redirect(redirectUrl);
+    });
 }

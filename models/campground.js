@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 const Review = require('./review');
 const { Schema } = mongoose;
 
-// https://res.cloudinary.com/dqnw9d56g/image/upload/c_scale,h_53,w_70/v1656143495/recipes/turtles.jpg
-
+// when we convert mongo object to json virtuals properties will be ignored so to not do so we set virtuals to true
+const options = { toJSON: { virtuals: true } }
 
 const ImageSchema = new Schema({
     url: String,
@@ -19,6 +19,17 @@ const CampgroundSchema = new Schema({
     price: Number,
     images: [ImageSchema],
     description: String,
+    geometry: {
+        type: {
+            type: String,
+            enum: ["Point"],
+            required: true
+        },
+        coordinates: {
+            type: [Number],
+            required: true
+        }
+    },
     location: String,
     author: {
         type: Schema.Types.ObjectId,
@@ -31,9 +42,12 @@ const CampgroundSchema = new Schema({
             ref: 'Review'
         }
     ]
+}, options);
+
+CampgroundSchema.virtual('properties.popUpMarkup').get(function () {
+    return `<strong><a href="/campgrounds/${this._id}">${this.title}</a></strong>
+    <p>${this.description.substring(0,20)}...</p>`
 });
-
-
 
 
 

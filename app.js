@@ -23,7 +23,7 @@ const User = require('./models/user');
 const userRoutes = require('./routes/users');
 const campgroundRoutes = require('./routes/campground');
 const reviewRoutes = require('./routes/review');
-
+mongoose.set('strictQuery', true);
 mongoose.connect("mongodb://localhost:27017/campgrounds", {
 
   // Parses the data from the project and returns back in json format
@@ -98,17 +98,9 @@ app.use('/', userRoutes);
 app.use('/campgrounds', campgroundRoutes);
 app.use('/campgrounds/:id/reviews', reviewRoutes);
 
-app.get('/fakeuser', async (req, res) => {
-  const user = new User({ email: 'manish@gmail.com', username: 'manish123' })
-
-  //register(user, password, cb) Convenience method to register a new user instance with a given password. Checks if username is unique. 
-  const newUser = await User.register(user, 'manish@123');
-
-  res.send(newUser);
-})
 
 app.get("/", (req, res) => {
-  res.send("Welcome to HOME!!");
+  res.render('home.ejs');
 });
 
 app.all("*", (req, res, next) => {

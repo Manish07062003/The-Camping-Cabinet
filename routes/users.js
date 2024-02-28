@@ -7,6 +7,8 @@ const passport = require('passport');
 // user controller
 const users = require('../controllers/users');
 
+const { storeReturnTo,isLoggedIn } = require('../middlewares');
+
 router.route('/register')
     // rendering register form
     .get(users.renderRegister)
@@ -19,9 +21,9 @@ router.route('/login')
     .get(users.renderLogin)
 
     // logging in using login form information
-    .post(passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), catchAsync(users.login))
+    .post(storeReturnTo, passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), catchAsync(users.login))
 
 // logging out 
-router.get('/logout', users.logout);
+router.get('/logout', isLoggedIn, users.logout);
 
 module.exports = router;

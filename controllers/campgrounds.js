@@ -1,5 +1,8 @@
 const Campground = require('../models/campground');
 const { cloudinary } = require('../cloudinary/index')
+const mapBoxToken = process.env.MAPBOX_TOKEN;
+const mapBoxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding-v6");
+const geoCoder = mapBoxGeocoding({ accessToken: mapBoxToken })
 
 module.exports.index = async (req, res) => {
     const camp = await Campground.find({});
@@ -26,8 +29,13 @@ module.exports.showCampground = async (req, res, next) => {
 
 module.exports.createCampground = async (req, res, next) => {
 
+    const geoData = await geoCoder.forwardGeocode({
+        query: req.body.campground.location,
+        limit: 1
+    }).send();
     // title and location are under campground because we gave a name campground[title] in the new.ejs form
     const campground = new Campground(req.body.campground);
+    campground.geometry = geoData.body.features[0];
     campground.images = req.files.map(f => ({ url: f.path, filename: f.filename }))
 
     // adding user id to the campground created by the user
@@ -44,7 +52,6 @@ module.exports.renderEditForm = async (req, res, next) => {
 }
 
 module.exports.updateCampground = async (req, res) => {
-    console.log(req.body);
     const campground = await Campground.findByIdAndUpdate(req.params.id, { ...req.body.campground });
     const imgs = req.files.map(f => ({ url: f.path, filename: f.filename }))
     campground.images.push(...imgs);
@@ -53,7 +60,7 @@ module.exports.updateCampground = async (req, res) => {
 
             // deletes images in cloudinary storage
             await cloudinary.uploader.destroy(filename);
-            
+
         }
         // deletes images in mongoDB 
         await campground.updateOne({ $pull: { images: { filename: { $in: req.body.deleteImages } } } })
